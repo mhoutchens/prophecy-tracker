@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kim Clement Prophecy Tracker</title>
+    
+    <!-- Open Graph / Social Sharing Meta Tags -->
+    <meta property="og:title" content="Kim Clement Prophecy Tracker">
+    <meta property="og:description" content="Tracking and analyzing Kim Clement's prophetic words alongside current events.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=630&fit=crop">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Kim Clement Prophecy Tracker">
+    <meta name="twitter:description" content="Tracking and analyzing Kim Clement's prophetic words alongside current events.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #d4a853;
+            --gold-light: #f0d78c;
+            --gold-dark: #a67c2e;
+            --bg-dark: #0a0a0c;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a24;
+            --text-primary: #e8e6e3;
+            --text-secondary: #9a9590;
+            --text-muted: #6a6560;
+            --accent-green: #4a9c6d;
+            --accent-blue: #5a8fd4;
+            --accent-amber: #d49a4a;
+            --accent-red: #c45c5c;
+            --border: #2a2a35;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(ellipse at top, rgba(212, 168, 83, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(212, 168, 83, 0.02) 0%, transparent 50%);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        header::before {
+            content: '✦';
+            display: block;
+            color: var(--gold);
+            font-size: 24px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(28px, 5vw, 42px);
+            font-weight: 500;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 20px rgba(212, 168, 83, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 25px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-family: 'Cinzel', serif;
+            font-size: 32px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* Filter Buttons */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            font-family: 'Cinzel', serif;
+            padding: 10px 24px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--gold-dark);
+            color: var(--gold);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+            border-color: var(--gold);
+            color: var(--bg-dark);
+        }
+        
+        /* Prophecy Cards */
+        .prophecy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .prophecy-card:hover {
+            border-color: var(--gold-dark);
+            box-shadow: 0 8px 40px rgba(212, 168, 83, 0.08);
+        }
+        
+        .prophecy-card.highlighted {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(212, 168, 83, 0.15);
+        }
+        
+        .card-header {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        
+        .card-header:hover {
+            background: var(--bg-card-hover);
+        }
+        
+        .card-title-section {
+            flex: 1;
+        }
+        
+        .card-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--gold);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .card-location {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .status-fulfilled {
+            background: rgba(74, 156, 109, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(74, 156, 109, 0.3);
+        }
+        
+        .status-fulfilling {
+            background: rgba(212, 154, 74, 0.15);
+            color: var(--accent-amber);
+            border: 1px solid rgba(212, 154, 74, 0.3);
+        }
+        
+        .status-watching {
+            background: rgba(90, 143, 212, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(90, 143, 212, 0.3);
+        }
+        
+        .status-pending {
+            background: rgba(150, 150, 150, 0.15);
+            color: var(--text-muted);
+            border: 1px solid rgba(150, 150, 150, 0.3);
+        }
+        
+        .expand-icon {
+            color: var(--text-muted);
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .prophecy-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Card Content */
+        .card-content {
+            display: none;
+            padding: 0 30px 30px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .prophecy-card.expanded .card-content {
+            display: block;
+        }
+        
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .summary {
+            font-size: 17px;
+            color: var(--text-secondary);
+            font-style: italic;
+            padding: 20px 0;
+            line-height: 1.8;
+        }
+        
+        /* Key Phrases */
+        .key-phrases {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .phrase-tag {
+            background: rgba(212, 168, 83, 0.1);
+            border: 1px solid rgba(212, 168, 83, 0.25);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--gold-light);
+        }
+        
+        /* Current Events */
+        .event-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--border);
+            padding: 18px 20px;
+            margin-bottom: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .event-item.fulfilled {
+            border-left-color: var(--accent-green);
+        }
+        
+        .event-item.fulfilling {
+            border-left-color: var(--accent-amber);
+        }
+        
+        .event-item.watching {
+            border-left-color: var(--accent-blue);
+        }
+        
+        .event-title {
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .event-status {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .event-details {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        /* Prophetic Insight */
+        .prophetic-insight {
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.08) 0%, rgba(212, 168, 83, 0.02) 100%);
+            border: 1px solid rgba(212, 168, 83, 0.2);
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .prophetic-insight p {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-style: italic;
+            line-height: 1.8;
+        }
+        
+        /* Full Text */
+        .full-text {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 25px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .full-text::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .full-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        
+        .full-text::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 3px;
+        }
+        
+        /* Share Buttons */
+        .share-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        
+        .share-label {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .share-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(212, 168, 83, 0.05);
+        }
+        
+        .share-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        
+        .share-btn.copied {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--gold);
+            color: var(--bg-dark);
+            padding: 15px 30px;
+            border-radius: 6px;
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+        
+        footer p {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-verse {
+            color: var(--text-muted);
+            font-size: 13px;
+            opacity: 0.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .card-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .card-meta {
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .stats-bar {
+                gap: 25px;
+            }
+            
+            .share-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .share-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Kim Clement</h1>
+        <p class="subtitle">Prophecy Tracker — Deciphering the prophetic words and watching for fulfillment</p>
+    </header>
+    
+    <div class="container">
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-number" id="totalCount">4</div>
+                <div class="stat-label">Prophecies</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="fulfilledCount">0</div>
+                <div class="stat-label">Fulfilled</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="fulfillingCount">0</div>
+                <div class="stat-label">Fulfilling</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="watchingCount">0</div>
+                <div class="stat-label">Watching</div>
+            </div>
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="fulfilled">Fulfilled</button>
+            <button class="filter-btn" data-filter="fulfilling">Fulfilling</button>
+            <button class="filter-btn" data-filter="watching">Watching</button>
+        </div>
+        
+        <div id="prophecyContainer"></div>
+    </div>
+    
+    <footer>
+        <p>Resources: <a href="https://www.houseofdestiny.org/" target="_blank">House of Destiny</a> · <a href="https://www.houseofdestiny.org/watch-kimtv/" target="_blank">Kim.TV Archives</a></p>
+        <p class="footer-verse">"The secret things belong to the LORD our God, but the things revealed belong to us and to our children forever" — Deuteronomy 29:29</p>
+    </footer>
+    
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+    
+    <script>
+        const prophecies = [
+            {
+                id: "daniel-emasculated",
+                date: "March 18, 2006",
+                location: "Toledo, OH",
+                title: "Daniel Shall Not Be Emasculated",
+                summary: "Prophetic declaration protecting this generation's children from 'emasculation,' with correlations to Ohio as a deciding state, Syria's neutralization, entertainment industry takeover, and the rise of greatest preachers in 12 years.",
+                keyPhrases: [
+                    "Daniel is not to be taken and emasculated",
+                    "I stand in this State that is a deciding State",
+                    "Syria, you little beast... You will not touch this Nation",
+                    "I will snatch from the powers of hell... actors, producers, musicians",
+                    "In the next 12 years the greatest preachers",
+                    "I am speaking about your children",
+                    "America, God will enlarge your borders",
+                    "Water coming from Edom",
+                    "Children drawn to the prophetic anointing"
+                ],
+                currentEvents: [
+                    {
+                        event: "Supreme Court Upholds Child Protection Laws",
+                        details: "June 18, 2025: SCOTUS ruled 6-3 in U.S. v. Skrmetti that state bans on gender-affirming procedures for minors are constitutional. 25+ states now have bans in place. Trump signed executive order 'Protecting Children from Chemical and Surgical Mutilation' on January 28, 2025.",
+                        status: "fulfilling"
+                    },
+                    {
+                        event: "Syria's Beast Neutralized",
+                        details: "Assad regime fell December 8, 2024 — exactly one year ago. The 'beast large in its own sight but small' is now scattered. Assad in Russian exile. Syria never successfully attacked America.",
+                        status: "fulfilled"
+                    },
+                    {
+                        event: "Ohio as Deciding State",
+                        details: "Trump won Ohio by 11.21% in 2024 — widest margin since Reagan 1984. No Republican has ever won presidency without Ohio. J.D. Vance (VP) is from Ohio. Bernie Moreno flipped Senate seat.",
+                        status: "fulfilled"
+                    },
+                    {
+                        event: "Entertainment Industry Shift",
+                        details: "'The Chosen' phenomenon began 2017-2018 (12 years after prophecy). Christian content now consistently profitable. Elon Musk acquired Twitter/X — breaking media gatekeepers.",
+                        status: "fulfilling"
+                    },
+                    {
+                        event: "Border Enlargement",
+                        details: "Watch for: Nations requesting American protection. Current discussions about Canada, Greenland, Panama Canal zone.",
+                        status: "watching"
+                    }
+                ],
+                propheticInsight: "The 'emasculation' reference connects to Daniel who was literally castrated when taken to Babylon. Kim declared protection over THIS generation's children from the same fate. This directly correlates to procedures targeting minors, which are now being legally reversed at both state and federal levels.",
+                fullText: `March 18, 2006 Toledo, OH
+
+Now Tony, this is what the Spirit of the Lord says, there is something better that is about to take place. God said, listen, if you think this is good, I have only just begun. You think that 500,000 is big, God said, how about 5 million? You see, I want to fill this place with the presence of the Holy One of Israel. And I want to give you what you need just like I gave to Solomon. And it is not going to come from the hands of the church, says the Spirit of the Lord. It is going to come from the hands of the world. God said, there is water that is coming from Edom. It is not going to come from the regular place. God said, there is something better that is about to take place.
+
+Your season of subtraction has come to an end. Tomorrow, the next period of time, things are going to change. Addiction is going to be broken, sickness will dissipate. The only subtractions you are going find now is the subtraction of demonic power, the subtraction of sickness, the subtraction of poverty.
+
+The Spirit of God says, look to this week, for even in this next week in this Nation something shall come forth, something shall be revealed. And God said, it shall take America on a new road. It shall take America on a new pathway. For I stand in this State that is a deciding State, says the Spirit of God. And once again it shall be in this State that I shall make a proclamation that shall bring about a massive change politically, which shall put America on the new road, on another pathway.
+
+God said, even as you have allowed the prophet to prophesy and you speak of this Nation grumbling, so many have detested and despised of this Nation, saying it deserves the judgment. Have you been with Me to Amsterdam? Have you been with Me, says the Lord, to Asia where child pornography is the order of the day? Come with Me, says the Spirit, and I will show you nations that are far more wicked than this Nation.
+
+Because I am going to raise up, I am going to raise up in the next 12 years the greatest preachers that have ever been known to mankind. Preachers that shall surpass Spurgeon, preachers that shall surpass some of the greatest preachers of the world. God said, you shall see them and they shall arise. I am speaking about your children. I am speaking about your children. They are the prophets and the preachers of tomorrow. Those are the ones that I am raising up.
+
+The prophetic voice is not for sale. Joseph is not for sale. Daniel is not to be taken and emasculated. I am raising up this generation to go into the marketplace, to the streets where demonic powers have ruled and reigned and strutted and said, we own this. God said, watch me raise up and take from their very own hands their treasures, take away the choice in actors, in producers, in musicians, in poets, in authors. In every arena I will snatch from the powers of hell. I will snatch from the powers of hell what they have been proud of.
+
+Prepare your houses, prepare your homes, prepare your churches for an invasion of the lost and the ungodly. And do not clothe them the way you want to clothe them and do not make them speak the language you want them to speak. For they will come with a stone in their hand, and God says, you will say, go ahead, use what you have in your hand.
+
+Syria, you little beast. Syria, you beast, large in your own sight, but small. You will not touch this Nation. God said, this Nation has walls that I have placed around it, walls that shall not come down unless the people stop praying. America, God will enlarge your borders, a nation and then another nation shall ask for your protection and then surrender.
+
+A little child will come, a little child will come and bring me a treasure that they lost. A little child will run to Me. They will bring treasures for the nations. They will ask of Me for the nations, their inheritance.
+
+The Spirit of the Lord said, even as the prophet stood behind the child, it shall be the prophets that shall raise up a generation, a Samuel that will recognize a David. The prophets will be raising up children. The greatest mark of the prophetic ministry is going to be the fact that children are drawn to them. The greatest sign that the prophetic is exploding and coming to the forefront is when you see children drawn to the prophetic anointing, and that will be the sign.`,
+                status: "fulfilling"
+            },
+            {
+                id: "european-reformation",
+                date: "October 4, 2009",
+                location: "Pasadena, CA",
+                title: "The Reformation of Europe",
+                summary: "A prophecy about a storm brewing and a beast of the east seeking to remove Christianity from Europe, with reformation beginning in four specific countries: Germany, Italy, Netherlands, and France.",
+                keyPhrases: [
+                    "A storm is brewing",
+                    "Beast of the east",
+                    "Remove Christianity from Europe, America, and Israel",
+                    "Reformation in Germany, Italy, Netherlands, and France",
+                    "One war manifesting in four different countries"
+                ],
+                currentEvents: [
+                    {
+                        event: "Right-Wing Nationalist Rise in Exact Four Countries",
+                        details: "Germany: AfD surging to 20%+. Italy: Giorgia Meloni elected PM 2022. Netherlands: Geert Wilders' party won 2023 elections. France: Marine Le Pen's party strongest opposition.",
+                        status: "fulfilling"
+                    },
+                    {
+                        event: "Islamic Immigration Crisis",
+                        details: "46 million Muslims now in Europe. Churches closing while mosques multiply. Cultural and religious tensions escalating across the continent.",
+                        status: "fulfilling"
+                    },
+                    {
+                        event: "Global Interconnected Conflicts",
+                        details: "Ukraine-Russia, Israel-Gaza, China-Taiwan tensions, Iran regional influence — multiple theaters that could align with 'one war in four countries.'",
+                        status: "watching"
+                    }
+                ],
+                propheticInsight: "Kim named exactly four countries where reformation would begin. Those precise four nations are now leading Europe's political and cultural shift back toward traditional values and national identity.",
+                fullText: `October 4, 2009 - Pasadena, CA
+
+The Spirit of the Lord says, there is a storm brewing. Can you not see the clouds? Can you not see what is happening? For God says, there is a beast of the east that is seeking to remove Christianity from Europe, America, and Israel.
+
+But God says, watch as I begin a reformation. It shall start in Germany. It shall start in Italy. It shall start in the Netherlands. It shall start in France. For God says, I am bringing a reformation to these nations and they shall arise and they shall say, 'We will not bow to the beast of the east.'
+
+This is one war, says the Lord, but it shall manifest in four different countries. Watch and see what I will do, for the reformation has begun, says the Lord.`,
+                status: "fulfilling"
+            },
+            {
+                id: "ryan-texas-senator",
+                date: "October 21, 2006",
+                location: "Huntsville, TX",
+                title: "Ryan — Future Texas Senator",
+                summary: "A prophecy about a 9-year-old boy named Ryan who would become a U.S. Senator, championing causes in schools and law, described as 'a short man with huge power.'",
+                keyPhrases: [
+                    "A boy named Ryan",
+                    "9 years old, turning 10 in December",
+                    "Shall become a Senator",
+                    "Champion causes in schools and law",
+                    "A short man with huge power",
+                    "Governing role in Texas with reduced crime"
+                ],
+                currentEvents: [
+                    {
+                        event: "Timeline Alignment",
+                        details: "Person would be 28-29 years old now (born ~1996). Becomes eligible for U.S. Senate in December 2026 (age 30 requirement). Watch Texas political landscape 2026-2030.",
+                        status: "watching"
+                    },
+                    {
+                        event: "Identification Pending",
+                        details: "Individual not yet publicly identified. May still be in preparation phase before entering public political life.",
+                        status: "watching"
+                    }
+                ],
+                propheticInsight: "Kim gave very specific details: name (Ryan), age (9, turning 10 in December), location (Huntsville, TX), and future role (Senator). The timeline suggests this person would become eligible for Senate around 2026.",
+                fullText: `October 21, 2006 - Huntsville, TX
+
+The Spirit of God says, there is a young boy, his name is Ryan. He is 9 years old and he shall turn 10 in December. 
+
+God says, this boy shall become a Senator. He shall champion causes in schools and in law. He is a short man with huge power, says the Lord.
+
+And God says, watch Texas, for this one shall have a governing role and crime shall be reduced. This is My servant Ryan, says the Lord.`,
+                status: "watching"
+            },
+            {
+                id: "trump-prophecies",
+                date: "2007-2014",
+                location: "Multiple Locations",
+                title: "Trump Shall Become President",
+                summary: "Multiple prophecies spanning 2007-2014 declaring Donald Trump would become President, including references to two terms, 'two presidents,' and specific details about his presidency.",
+                keyPhrases: [
+                    "Trump shall become a trumpet",
+                    "I will raise up the Trump to become a trumpet",
+                    "Two terms",
+                    "Praying president",
+                    "Gold — his hair is gold",
+                    "They will say 'impeach, impeach' but it will not happen"
+                ],
+                currentEvents: [
+                    {
+                        event: "First Term Fulfilled",
+                        details: "Donald Trump elected 45th President November 8, 2016. Served 2017-2021.",
+                        status: "fulfilled"
+                    },
+                    {
+                        event: "Impeachment Prophecy Fulfilled",
+                        details: "Trump was impeached twice by House but never removed from office — 'impeach, impeach but it will not happen.'",
+                        status: "fulfilled"
+                    },
+                    {
+                        event: "Second Term Fulfilled",
+                        details: "Trump elected 47th President November 5, 2024. Two non-consecutive terms — the 'two presidents' reference.",
+                        status: "fulfilled"
+                    }
+                ],
+                propheticInsight: "Kim Clement prophesied Trump's presidency years before he announced his candidacy. The 'two presidents' reference puzzled many until the non-consecutive terms made it clear — Trump is both the 45th AND 47th President.",
+                fullText: `Compiled from multiple prophecies 2007-2014:
+
+April 4, 2007 - "There will be a praying president, not a religious one. For I will fool the people, says the Lord. I will fool the people, yes I will. God says, the one that is chosen shall go in and they shall say, 'he has hot blood.'"
+
+February 22, 2014 - "I have chosen this man, Donald Trump, for such a time as this. For as Benjamin Netanyahu is to Israel, so shall this man be to the United States of America! For I will use this man to bring honor, respect and restoration to America."
+
+"Trump shall become a trumpet, says the Lord! I will raise up the Trump to become a trumpet and Bill Gates to open gates of an Increase of Funds into the church."
+
+"They will say 'impeach, impeach,' they say. But this shall not happen. It shall not happen, says the Lord."`,
+                status: "fulfilled"
+            }
+        ];
+        
+        // Get base URL for sharing
+        const baseUrl = window.location.origin + window.location.pathname;
+        
+        // Render prophecies
+        function renderProphecies(filter = 'all') {
+            const container = document.getElementById('prophecyContainer');
+            container.innerHTML = '';
+            
+            let fulfilled = 0, fulfilling = 0, watching = 0;
+            
+            const filtered = prophecies.filter(p => {
+                if (p.status === 'fulfilled') fulfilled++;
+                if (p.status === 'fulfilling') fulfilling++;
+                if (p.status === 'watching') watching++;
+                
+                if (filter === 'all') return true;
+                return p.status === filter;
+            });
+            
+            document.getElementById('fulfilledCount').textContent = fulfilled;
+            document.getElementById('fulfillingCount').textContent = fulfilling;
+            document.getElementById('watchingCount').textContent = watching;
+            
+            filtered.forEach(prophecy => {
+                const card = document.createElement('div');
+                card.className = 'prophecy-card';
+                card.id = prophecy.id;
+                card.dataset.status = prophecy.status;
+                
+                card.innerHTML = `
+                    <div class="card-header" onclick="toggleCard('${prophecy.id}')">
+                        <div class="card-title-section">
+                            <div class="card-date">${prophecy.date}</div>
+                            <h3 class="card-title">${prophecy.title}</h3>
+                            <div class="card-location">${prophecy.location}</div>
+                        </div>
+                        <div class="card-meta">
+                            <span class="status-badge status-${prophecy.status}">${prophecy.status}</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p class="summary">${prophecy.summary}</p>
+                        
+                        <h4 class="section-title">Key Prophetic Phrases</h4>
+                        <div class="key-phrases">
+                            ${prophecy.keyPhrases.map(phrase => `<span class="phrase-tag">"${phrase}"</span>`).join('')}
+                        </div>
+                        
+                        <h4 class="section-title">Current Events Correlation</h4>
+                        ${prophecy.currentEvents.map(event => `
+                            <div class="event-item ${event.status}">
+                                <div class="event-title">
+                                    ${event.event}
+                                    <span class="event-status status-badge status-${event.status}">${event.status}</span>
+                                </div>
+                                <p class="event-details">${event.details}</p>
+                            </div>
+                        `).join('')}
+                        
+                        ${prophecy.propheticInsight ? `
+                            <h4 class="section-title">Prophetic Insight</h4>
+                            <div class="prophetic-insight">
+                                <p>${prophecy.propheticInsight}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <h4 class="section-title">Full Prophecy Text</h4>
+                        <div class="full-text">${prophecy.fullText}</div>
+                        
+                        <div class="share-section">
+                            <span class="share-label">Share This Prophecy</span>
+                            <div class="share-buttons">
+                                <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(prophecy.title + ' - Kim Clement Prophecy')}&url=${encodeURIComponent(baseUrl + '#' + prophecy.id)}" target="_blank" class="share-btn">
+                                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                    X / Twitter
+                                </a>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(baseUrl + '#' + prophecy.id)}" target="_blank" class="share-btn">
+                                    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                    Facebook
+                                </a>
+                                <button class="share-btn" onclick="copyLink('${prophecy.id}')">
+                                    <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                                    Copy Link
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+            
+            // Check for hash in URL and expand that card
+            if (window.location.hash) {
+                const targetId = window.location.hash.substring(1);
+                const targetCard = document.getElementById(targetId);
+                if (targetCard) {
+                    targetCard.classList.add('expanded', 'highlighted');
+                    setTimeout(() => {
+                        targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+            }
+        }
+        
+        function toggleCard(id) {
+            const card = document.getElementById(id);
+            card.classList.toggle('expanded');
+        }
+        
+        function copyLink(id) {
+            const url = baseUrl + '#' + id;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard!');
+            });
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderProphecies(btn.dataset.filter);
+            });
+        });
+        
+        // Handle hash changes
+        window.addEventListener('hashchange', () => {
+            const targetId = window.location.hash.substring(1);
+            const targetCard = document.getElementById(targetId);
+            if (targetCard) {
+                document.querySelectorAll('.prophecy-card').forEach(c => c.classList.remove('highlighted'));
+                targetCard.classList.add('expanded', 'highlighted');
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+        
+        // Initial render
+        renderProphecies();
+    </script>
+</body>
+</html>
